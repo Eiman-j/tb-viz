@@ -8,93 +8,47 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <style>
   :root {
-    --bg: #0d0d0d;
-    --bg2: #141414;
-    --bg3: #1a1a1a;
-    --card: #1f1f1f;
-    --border: #2a2a2a;
-    --orange: #f97316;
-    --orange2: #fb923c;
-    --orange3: #fdba74;
-    --orange4: #fed7aa;
-    --amber: #f59e0b;
-    --text: #f5f5f5;
-    --text2: #a3a3a3;
-    --text3: #737373;
-    --red: #ef4444;
-    --green: #22c55e;
+    --bg: #0d0d0d; --bg2: #141414; --bg3: #1a1a1a; --card: #1f1f1f; --border: #2a2a2a;
+    --orange: #f97316; --orange2: #fb923c; --orange3: #fdba74; --amber: #f59e0b;
+    --text: #f5f5f5; --text2: #a3a3a3; --text3: #737373;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    overflow-x: hidden;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
 
-  /* ── HERO ── */
+  /* HERO */
   #hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
     background: radial-gradient(ellipse 80% 60% at 50% 50%, #1c1200 0%, #0d0d0d 70%);
   }
-  #particle-canvas {
-    position: absolute; inset: 0; pointer-events: none;
-  }
+  #particle-canvas { position: absolute; inset: 0; pointer-events: none; }
   .hero-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.25em;
-    color: var(--orange);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.3s forwards;
+    font-family: 'DM Mono', monospace; font-size: 0.75rem; letter-spacing: 0.25em;
+    color: var(--orange); text-transform: uppercase; margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.3s forwards; text-align: center; padding: 0 1rem;
   }
-  #ticker-wrap {
-    overflow: hidden;
-    width: min(900px, 92vw);
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
+  #ticker-wrap { width: min(920px, 92vw); text-align: center; margin-bottom: 1.5rem; }
+  /* FIX 1: white-space:normal so long titles wrap instead of getting clipped */
   #ticker {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.8rem, 7vw, 6rem);
-    color: var(--text);
-    line-height: 1.05;
-    white-space: nowrap;
-    display: inline-block;
+    font-size: clamp(2.2rem, 6vw, 5.5rem);
+    color: var(--text); line-height: 1.1;
+    white-space: normal;
+    display: block;
+    padding: 0 0.5rem;
   }
   #ticker span.highlight { color: var(--orange); }
   .hero-sub {
-    font-size: 1rem;
-    color: var(--text2);
-    max-width: 560px;
-    text-align: center;
-    line-height: 1.7;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.9s forwards;
-    padding: 0 1rem;
+    font-size: 1rem; color: var(--text2); max-width: 560px; text-align: center;
+    line-height: 1.7; opacity: 0; animation: fadeUp 0.8s 0.9s forwards; padding: 0 1rem;
   }
   .scroll-cue {
-    position: absolute;
-    bottom: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text3);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    opacity: 0;
-    animation: fadeUp 0.8s 1.4s forwards;
+    position: absolute; bottom: 2.5rem; display: flex; flex-direction: column;
+    align-items: center; gap: 0.5rem; color: var(--text3); font-size: 0.7rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    opacity: 0; animation: fadeUp 0.8s 1.4s forwards;
   }
   .scroll-cue .arrow {
     width: 1px; height: 40px;
@@ -102,300 +56,174 @@
     animation: scrollPulse 2s infinite;
   }
 
-  /* ── SECTION COMMON ── */
-  .section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 6rem 1.5rem 4rem;
-  }
-  .section-header {
-    margin-bottom: 2.5rem;
-  }
+  /* SECTIONS */
+  .section { max-width: 1200px; margin: 0 auto; padding: 6rem 1.5rem 4rem; }
+  .section-header { margin-bottom: 2.5rem; }
   .section-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    color: var(--orange);
-    text-transform: uppercase;
-    margin-bottom: 0.6rem;
+    font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--orange); text-transform: uppercase; margin-bottom: 0.6rem;
   }
   .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    color: var(--text);
-    line-height: 1;
-    margin-bottom: 0.75rem;
+    font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 4vw, 3.2rem);
+    color: var(--text); line-height: 1; margin-bottom: 0.75rem;
   }
-  .section-desc {
-    font-size: 0.9rem;
-    color: var(--text2);
-    max-width: 600px;
-    line-height: 1.7;
-  }
-  .interaction-pills {
-    display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem;
-  }
+  .section-desc { font-size: 0.9rem; color: var(--text2); max-width: 600px; line-height: 1.7; }
+  .interaction-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
   .pill {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    padding: 0.2rem 0.65rem;
-    border-radius: 999px;
-    border: 1px solid var(--orange);
-    color: var(--orange);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; padding: 0.2rem 0.65rem;
+    border-radius: 999px; border: 1px solid var(--orange); color: var(--orange);
+    letter-spacing: 0.1em; text-transform: uppercase;
   }
+  .divider { height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent); margin: 0 1.5rem; }
 
-  /* ── DIVIDER ── */
-  .divider {
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--border), transparent);
-    margin: 0 1.5rem;
-  }
-
-  /* ── CHART CARD ── */
+  /* CHART CARD */
   .chart-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    position: relative;
-    overflow: hidden;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem; position: relative; overflow: visible;
   }
   .chart-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
     background: linear-gradient(90deg, var(--orange), var(--amber));
+    border-radius: 12px 12px 0 0;
   }
 
-  /* ── VIZ 1: LINE CHART ── */
-  #viz1-controls {
-    display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1.5rem;
+  /* CHART CAPTION */
+  .chart-caption {
+    margin-top: 1.25rem; padding: 1rem 1.1rem;
+    background: var(--bg3); border-left: 3px solid var(--orange);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.82rem; color: var(--text2); line-height: 1.75;
   }
+  .chart-caption strong { color: var(--orange3); }
+
+  /* CONTROLS */
   .ctrl-group { display: flex; flex-direction: column; gap: 0.3rem; }
   .ctrl-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem; letter-spacing: 0.12em;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em;
     color: var(--text3); text-transform: uppercase;
   }
-  select, .btn-group button {
-    background: var(--bg3);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.45rem 0.85rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    appearance: none;
-  }
-  select:hover, select:focus { border-color: var(--orange); outline: none; }
   .btn-group { display: flex; gap: 0.25rem; flex-wrap: wrap; }
   .btn-group button {
-    border-radius: 6px;
-    padding: 0.4rem 0.75rem;
-    font-size: 0.78rem;
+    background: var(--bg3); color: var(--text); border: 1px solid var(--border);
+    border-radius: 6px; padding: 0.4rem 0.75rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+    cursor: pointer; transition: border-color 0.2s, background 0.2s;
+    -webkit-appearance: none; appearance: none;
   }
-  .btn-group button.active {
-    background: var(--orange);
-    border-color: var(--orange);
-    color: #000;
-    font-weight: 500;
-  }
+  .btn-group button.active { background: var(--orange); border-color: var(--orange); color: #000; font-weight: 500; }
   .btn-group button:hover:not(.active) { border-color: var(--orange); }
-
-  #line-chart svg { display: block; }
-
-  .legend {
-    display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem;
-  }
-  .legend-item {
-    display: flex; align-items: center; gap: 0.4rem;
-    font-size: 0.78rem; color: var(--text2); cursor: pointer;
-    transition: opacity 0.2s;
-  }
-  .legend-item.dimmed { opacity: 0.35; }
-  .legend-dot {
-    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  #viz1-controls, #viz2-controls, #viz3-controls {
+    display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1.2rem;
   }
 
-  /* ── VIZ 2: SCATTER ── */
-  #viz2-controls {
-    display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem;
-  }
-  #scatter-wrap { position: relative; }
-  #scatter-tooltip, #bar-tooltip, #line-tooltip {
-    position: absolute;
-    background: #111;
-    border: 1px solid var(--orange);
-    border-radius: 8px;
-    padding: 0.65rem 0.9rem;
-    font-size: 0.78rem;
-    color: var(--text);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s;
-    z-index: 10;
-    line-height: 1.6;
-    max-width: 200px;
-  }
-  #scatter-tooltip strong, #bar-tooltip strong, #line-tooltip strong {
-    color: var(--orange); display: block; margin-bottom: 0.2rem;
-  }
-
-  /* ── VIZ 3: BAR CHART ── */
-  #viz3-controls {
-    display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem;
-  }
-  #bar-wrap { position: relative; }
-
-  /* ── REGION FILTER CHIPS ── */
+  /* CHIPS */
   .region-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
   .chip {
-    padding: 0.3rem 0.7rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    color: var(--text2);
-    background: transparent;
-    transition: all 0.18s;
+    padding: 0.3rem 0.7rem; border-radius: 999px;
+    font-size: 0.75rem; font-family: 'DM Mono', monospace; letter-spacing: 0.08em;
+    cursor: pointer; border: 1px solid var(--border); color: var(--text2);
+    background: transparent; transition: all 0.18s;
   }
-  .chip.active {
-    border-color: currentColor;
-    font-weight: 500;
-  }
+  .chip.active { font-weight: 500; }
 
-  /* ── DETAIL PANEL (Elaborate) ── */
+  /* LEGEND */
+  .legend { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+  .legend-item {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.78rem; color: var(--text2); cursor: pointer; transition: opacity 0.2s;
+    user-select: none;
+  }
+  .legend-item.dimmed { opacity: 0.3; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* TOOLTIP */
+  .tip {
+    position: absolute; background: #111; border: 1px solid var(--orange);
+    border-radius: 8px; padding: 0.65rem 0.9rem;
+    font-size: 0.78rem; color: var(--text);
+    pointer-events: none; opacity: 0; transition: opacity 0.15s;
+    z-index: 20; line-height: 1.65; max-width: 220px; min-width: 140px;
+  }
+  .tip strong { color: var(--orange); display: block; margin-bottom: 0.25rem; }
+
+  /* WRAPS */
+  #scatter-wrap, #bar-wrap { position: relative; }
+
+  /* DETAIL PANEL */
   #detail-panel {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.25rem;
-    margin-top: 1.25rem;
-    display: none;
-    animation: fadeIn 0.25s ease;
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.25rem; margin-top: 1.25rem; display: none; animation: fadeIn 0.25s ease;
   }
   #detail-panel.visible { display: block; }
   .detail-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-    margin-top: 0.75rem;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
+    gap: 1rem; margin-top: 0.75rem;
   }
   .detail-stat { display: flex; flex-direction: column; gap: 0.15rem; }
-  .detail-stat .val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.5rem;
-    color: var(--orange2);
-  }
+  .detail-stat .val { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--orange2); }
   .detail-stat .key {
-    font-size: 0.7rem;
-    color: var(--text3);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 0.7rem; color: var(--text3);
+    font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase;
   }
 
-  /* ── YEAR SLIDER ── */
+  /* SLIDER */
   .slider-row { display: flex; align-items: center; gap: 1rem; }
   input[type=range] {
-    -webkit-appearance: none;
-    appearance: none;
-    height: 4px;
-    border-radius: 2px;
-    background: var(--border);
-    outline: none;
-    cursor: pointer;
-    flex: 1;
-    min-width: 120px;
+    -webkit-appearance: none; appearance: none;
+    height: 4px; border-radius: 2px; background: var(--border);
+    outline: none; cursor: pointer; flex: 1; min-width: 140px;
   }
   input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    background: var(--orange);
-    cursor: pointer;
-    box-shadow: 0 0 8px rgba(249,115,22,0.5);
+    -webkit-appearance: none; width: 16px; height: 16px;
+    border-radius: 50%; background: var(--orange); cursor: pointer;
+    box-shadow: 0 0 8px rgba(249,115,22,.5);
   }
-  .range-val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    color: var(--orange);
-    min-width: 50px;
+  input[type=range]::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--orange);
+    cursor: pointer; border: none; box-shadow: 0 0 8px rgba(249,115,22,.5);
   }
+  .range-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--orange); min-width: 50px; }
 
-  /* ── FOOTER ── */
+  /* FOOTER */
   footer {
-    text-align: center;
-    padding: 3rem 1rem 4rem;
-    color: var(--text3);
-    font-size: 0.78rem;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.1em;
-    border-top: 1px solid var(--border);
-    margin-top: 4rem;
+    text-align: center; padding: 3rem 1rem 4rem; color: var(--text3);
+    font-size: 0.78rem; font-family: 'DM Mono', monospace; letter-spacing: 0.1em;
+    border-top: 1px solid var(--border); margin-top: 4rem;
   }
 
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; } to { opacity: 1; }
-  }
-  @keyframes scrollPulse {
-    0%,100% { opacity: 0.3; transform: scaleY(0.8); }
-    50% { opacity: 1; transform: scaleY(1.1); }
-  }
-  .reveal {
-    opacity: 0; transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .reveal.visible { opacity: 1; transform: none; }
-
-  /* scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--orange); }
+  /* ANIMATIONS */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes scrollPulse { 0%,100%{opacity:.3;transform:scaleY(.8)} 50%{opacity:1;transform:scaleY(1.1)} }
+  .reveal { opacity:0; transform:translateY(30px); transition:opacity .7s ease,transform .7s ease; }
+  .reveal.visible { opacity:1; transform:none; }
+  ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--orange)}
 </style>
 </head>
 <body>
 
-<!-- ──────────── HERO ──────────── -->
+<!-- HERO -->
 <section id="hero">
   <canvas id="particle-canvas"></canvas>
   <div class="hero-label">WHO Global Tuberculosis Burden Dataset · 1990 – 2013</div>
-  <div id="ticker-wrap">
-    <div id="ticker">Loading…</div>
-  </div>
+  <div id="ticker-wrap"><div id="ticker">Loading…</div></div>
   <p class="hero-sub">An interactive exploration of tuberculosis burden across <strong>219 countries</strong> and <strong>6 WHO regions</strong> over 24 years. Scroll to uncover patterns of disease, death, and detection.</p>
-  <div class="scroll-cue">
-    <span>Scroll</span>
-    <div class="arrow"></div>
-  </div>
+  <div class="scroll-cue"><span>Scroll</span><div class="arrow"></div></div>
 </section>
 
 <div class="divider"></div>
 
-<!-- ──────────── VIZ 1: LINE CHART ──────────── -->
+<!-- VIZ 1 -->
 <div class="section reveal" id="sec1">
   <div class="section-header">
     <div class="section-tag">Visualization 01 — Temporal Trends</div>
     <div class="section-title">How Has TB Burden Shifted Over Time?</div>
-    <div class="section-desc">Track incidence, prevalence, and mortality rates by region from 1990 to 2013. Select metrics, toggle regions, and switch between log and linear scales.</div>
+    <div class="section-desc">Track incidence, prevalence, and mortality rates by WHO region from 1990 to 2013. Toggle regions, switch metrics, and change scale to compare trends.</div>
     <div class="interaction-pills">
-      <span class="pill">Filter</span>
-      <span class="pill">Encode</span>
-      <span class="pill">Reconfigure</span>
-      <span class="pill">Connect</span>
+      <span class="pill">Filter</span><span class="pill">Encode</span>
+      <span class="pill">Reconfigure</span><span class="pill">Connect</span>
     </div>
   </div>
   <div class="chart-card">
@@ -409,7 +237,7 @@
         </div>
       </div>
       <div class="ctrl-group">
-        <div class="ctrl-label">Scale</div>
+        <div class="ctrl-label">Y-Axis Scale</div>
         <div class="btn-group" id="scale-btns">
           <button class="active" data-scale="linear">Linear</button>
           <button data-scale="log">Log</button>
@@ -417,29 +245,32 @@
       </div>
     </div>
     <div class="ctrl-group" style="margin-bottom:1rem">
-      <div class="ctrl-label">Regions (click to toggle)</div>
+      <div class="ctrl-label">Toggle Regions — click to show / hide a line</div>
       <div class="region-chips" id="region-chips1"></div>
     </div>
-    <div id="line-chart"></div>
-    <div id="line-tooltip"></div>
+    <div id="line-chart" style="position:relative"></div>
     <div class="legend" id="line-legend"></div>
+    <div class="chart-caption">
+      <strong>Reading the chart:</strong> Each line is the regional average rate per 100,000 people per year.
+      SE Asia and Africa carry the highest burden throughout. Most regions trend downward after ~2000, reflecting global treatment scale-up.
+      Switch to <strong>Log scale</strong> to meaningfully compare low-burden regions like Europe and the Americas alongside high-burden ones.
+      <strong>Click any region chip above or legend label below</strong> to isolate or remove individual lines.
+      Hover over the chart to see exact values for all visible regions at a given year.
+    </div>
   </div>
 </div>
 
 <div class="divider"></div>
 
-<!-- ──────────── VIZ 2: SCATTER ──────────── -->
+<!-- VIZ 2 -->
 <div class="section reveal" id="sec2">
   <div class="section-header">
     <div class="section-tag">Visualization 02 — Country Comparison</div>
     <div class="section-title">Detection vs. Incidence: Who Gets Missed?</div>
-    <div class="section-desc">Each bubble is a country. X-axis shows TB incidence rate; Y-axis shows case detection rate. Bubble size encodes total cases. Filter by region and year. Click any country to elaborate.</div>
+    <div class="section-desc">Each bubble is a country. X-axis = TB incidence rate; Y-axis = case detection rate. Bubble size encodes total cases. Drag the year slider, filter by region, and click any bubble for details.</div>
     <div class="interaction-pills">
-      <span class="pill">Select</span>
-      <span class="pill">Filter</span>
-      <span class="pill">Encode</span>
-      <span class="pill">Elaborate</span>
-      <span class="pill">Abstract</span>
+      <span class="pill">Select</span><span class="pill">Filter</span>
+      <span class="pill">Encode</span><span class="pill">Elaborate</span><span class="pill">Abstract</span>
     </div>
   </div>
   <div class="chart-card">
@@ -452,34 +283,39 @@
         </div>
       </div>
       <div class="ctrl-group">
-        <div class="ctrl-label">Region Filter</div>
+        <div class="ctrl-label">Filter by Region</div>
         <div class="region-chips" id="region-chips2"></div>
       </div>
     </div>
     <div id="scatter-wrap">
       <div id="scatter-chart"></div>
-      <div id="scatter-tooltip"></div>
+      <div class="tip" id="scatter-tooltip"></div>
     </div>
     <div id="detail-panel">
-      <div id="detail-title" style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--orange)"></div>
+      <div id="detail-title"></div>
       <div class="detail-grid" id="detail-grid"></div>
+    </div>
+    <div class="chart-caption">
+      <strong>Reading the chart:</strong> Countries <em>above</em> the orange dashed line (90%) are meeting the WHO detection target — mostly European or high-income nations.
+      Countries in the <em>bottom-right</em> have high incidence but poor detection: disease is spreading but cases go undiagnosed.
+      <strong>Bubble size</strong> encodes total case count — a large bubble sitting low on the chart (common in Africa and SE Asia) signals the largest unmet need.
+      <strong>Drag the year slider</strong> to watch detection rates improve globally over time.
+      <strong>Click any bubble</strong> to expand a full country stats panel below the chart.
     </div>
   </div>
 </div>
 
 <div class="divider"></div>
 
-<!-- ──────────── VIZ 3: BAR CHART ──────────── -->
+<!-- VIZ 3 -->
 <div class="section reveal" id="sec3">
   <div class="section-header">
     <div class="section-tag">Visualization 03 — Regional Snapshot</div>
     <div class="section-title">Which Regions Carry the Heaviest Burden?</div>
-    <div class="section-desc">Stacked/grouped bar chart aggregating total TB cases by region. Toggle between absolute counts and per-capita rates. Use year filter to animate through time.</div>
+    <div class="section-desc">Aggregated comparison of all six WHO regions for a selected year. Toggle between total cases, incidence rates, and mortality rates to understand different dimensions of burden.</div>
     <div class="interaction-pills">
-      <span class="pill">Reconfigure</span>
-      <span class="pill">Filter</span>
-      <span class="pill">Encode</span>
-      <span class="pill">Abstract</span>
+      <span class="pill">Reconfigure</span><span class="pill">Filter</span>
+      <span class="pill">Encode</span><span class="pill">Abstract</span>
     </div>
   </div>
   <div class="chart-card">
@@ -502,32 +338,31 @@
     </div>
     <div id="bar-wrap">
       <div id="bar-chart"></div>
-      <div id="bar-tooltip"></div>
+      <div class="tip" id="bar-tooltip"></div>
+    </div>
+    <div class="chart-caption">
+      <strong>Reading the chart:</strong> Bars are sorted highest to lowest for the selected year and metric, and each bar uses the region's own color for consistency with other charts.
+      In <strong>Total Cases</strong> mode, SE Asia and Africa rank highest due to large populations — switch to <strong>Incidence Rate</strong> to normalize by population and compare true per-person burden: Africa's rate is the highest of any region.
+      <strong>Drag the year slider</strong> to animate through time and watch rankings shift — Europe and the Americas show the steepest long-term declines.
+      Hover any bar for exact values.
     </div>
   </div>
 </div>
 
 <footer>
   <div>WHO Global TB Burden Dataset · 219 Countries · 1990–2013 · 5,120 Records</div>
-  <div style="margin-top:0.4rem;color:var(--text3)">Interactions: Select · Filter · Encode · Connect · Reconfigure · Elaborate · Abstract</div>
+  <div style="margin-top:.4rem;color:#525252">Interactions: Select · Filter · Encode · Connect · Reconfigure · Elaborate · Abstract</div>
 </footer>
 
 <script>
-// ═══════════════════════════════════════════════
-// DATA (inline – fetched via fetch from same dir)
-// ═══════════════════════════════════════════════
-const REGION_FULL = {
-  AFR: 'Africa', AMR: 'Americas', EMR: 'E. Mediterranean',
-  EUR: 'Europe', SEA: 'SE Asia', WPR: 'W. Pacific'
-};
-const REGION_COLOR = {
-  AFR: '#f97316', AMR: '#fb923c', EMR: '#fbbf24',
-  EUR: '#fdba74', SEA: '#fed7aa', WPR: '#fde68a'
-};
+// ── Region config ────────────────────────────────
+const REGION_FULL  = { AFR:'Africa', AMR:'Americas', EMR:'E. Mediterranean', EUR:'Europe', SEA:'SE Asia', WPR:'W. Pacific' };
+// FIX: distinct, visible colors for all 6 regions (no more washed-out yellows)
+const REGION_COLOR = { AFR:'#f97316', AMR:'#fb923c', EMR:'#fbbf24', EUR:'#a3e635', SEA:'#38bdf8', WPR:'#e879f9' };
 const REGIONS = ['AFR','AMR','EMR','EUR','SEA','WPR'];
 
-// ── Hero Ticker ─────────────────────────────────
-const questions = [
+// ── Ticker ────────────────────────────────────────
+const QUESTIONS = [
   'WHERE IS TB <span class="highlight">KILLING</span> THE MOST?',
   'WHO IS BEING <span class="highlight">MISSED</span>?',
   'HOW FAST IS <span class="highlight">DETECTION</span> IMPROVING?',
@@ -536,277 +371,205 @@ const questions = [
 ];
 let qIdx = 0;
 const ticker = document.getElementById('ticker');
-
-function nextQuestion() {
-  ticker.style.transition = 'transform 0.5s cubic-bezier(.77,0,.18,1), opacity 0.4s';
-  ticker.style.transform = 'translateY(-30px)';
-  ticker.style.opacity = '0';
-  setTimeout(() => {
-    qIdx = (qIdx + 1) % questions.length;
-    ticker.innerHTML = questions[qIdx];
-    ticker.style.transition = 'none';
-    ticker.style.transform = 'translateY(30px)';
-    ticker.style.opacity = '0';
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        ticker.style.transition = 'transform 0.5s cubic-bezier(.77,0,.18,1), opacity 0.4s';
-        ticker.style.transform = 'translateY(0)';
-        ticker.style.opacity = '1';
-      });
-    });
-  }, 450);
-}
-ticker.innerHTML = questions[0];
+ticker.innerHTML = QUESTIONS[0];
 ticker.style.opacity = '1';
-setInterval(nextQuestion, 3200);
 
-// ── Particle Canvas ──────────────────────────────
-(function() {
-  const canvas = document.getElementById('particle-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [];
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-  for (let i = 0; i < 60; i++) {
-    particles.push({
-      x: Math.random() * 1000,
-      y: Math.random() * 1000,
-      r: Math.random() * 1.5 + 0.3,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      a: Math.random() * 0.5 + 0.1
+function nextQ() {
+  ticker.style.transition = 'transform .45s cubic-bezier(.77,0,.18,1), opacity .35s';
+  ticker.style.transform = 'translateY(-22px)'; ticker.style.opacity = '0';
+  setTimeout(() => {
+    qIdx = (qIdx + 1) % QUESTIONS.length;
+    ticker.innerHTML = QUESTIONS[qIdx];
+    ticker.style.transition = 'none';
+    ticker.style.transform = 'translateY(22px)'; ticker.style.opacity = '0';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      ticker.style.transition = 'transform .45s cubic-bezier(.77,0,.18,1), opacity .35s';
+      ticker.style.transform = 'translateY(0)'; ticker.style.opacity = '1';
+    }));
+  }, 400);
+}
+setInterval(nextQ, 3400);
+
+// ── Particles ─────────────────────────────────────
+(function(){
+  const cv = document.getElementById('particle-canvas'), ctx = cv.getContext('2d');
+  let W, H;
+  const pts = Array.from({length:55}, () => ({
+    x:Math.random()*1000, y:Math.random()*1000,
+    r:Math.random()*1.4+.3, vx:(Math.random()-.5)*.28, vy:(Math.random()-.5)*.28,
+    a:Math.random()*.4+.08
+  }));
+  function resize(){ W = cv.width = innerWidth; H = cv.height = innerHeight; }
+  resize(); addEventListener('resize', resize);
+  (function loop(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{
+      p.x=(p.x+p.vx+1000)%1000; p.y=(p.y+p.vy+1000)%1000;
+      ctx.beginPath(); ctx.arc(p.x*W/1000, p.y*H/1000, p.r, 0, Math.PI*2);
+      ctx.fillStyle=`rgba(249,115,22,${p.a})`; ctx.fill();
     });
-  }
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    particles.forEach(p => {
-      p.x = ((p.x + p.vx + W) % W);
-      p.y = ((p.y + p.vy + H) % H);
-      ctx.beginPath();
-      ctx.arc(p.x * W / 1000, p.y * H / 1000, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(249,115,22,${p.a})`;
-      ctx.fill();
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
+    requestAnimationFrame(loop);
+  })();
 })();
 
-// ── Scroll reveal ────────────────────────────────
-const revealEls = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1 });
-revealEls.forEach(el => io.observe(el));
+// ── Scroll reveal ─────────────────────────────────
+const io = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting && e.target.classList.add('visible')), {threshold:.08});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-// ─────────────────────────────────────────────────
-// LOAD DATA
-// ─────────────────────────────────────────────────
+// ── Load data ─────────────────────────────────────
 fetch('tb_data.json')
   .then(r => r.json())
-  .then(rawData => {
-    initViz1(rawData);
-    initViz2(rawData);
-    initViz3(rawData);
-  })
-  .catch(() => {
-    // fallback: embed notice
-    document.querySelectorAll('.chart-card').forEach(c => {
-      c.innerHTML += '<p style="color:var(--text2);padding:2rem">Data file not found. Place tb_data.json alongside index.html.</p>';
-    });
-  });
+  .then(raw => { initViz1(raw); initViz2(raw); initViz3(raw); })
+  .catch(() => document.querySelectorAll('.chart-card').forEach(c =>
+    c.insertAdjacentHTML('beforeend','<p style="color:var(--text2);padding:2rem 0">⚠ tb_data.json not found. Place it in the same folder as index.html.</p>')
+  ));
 
-// ─────────────────────────────────────────────────
+// ══════════════════════════════════════════════════
 // VIZ 1 — LINE CHART
-// ─────────────────────────────────────────────────
+// ══════════════════════════════════════════════════
 function initViz1(data) {
-  let metric = 'incidence_rate';
-  let scaleType = 'linear';
-  let activeRegions = new Set(REGIONS);
+  let metric = 'incidence_rate', scaleType = 'linear';
+  // FIX: use a Map per-region so toggling actually hides that region's line
+  const active = new Map(REGIONS.map(r => [r, true]));
 
-  // Build region chips
-  const chips1 = document.getElementById('region-chips1');
+  // Build chips
+  const chipsEl = document.getElementById('region-chips1');
   REGIONS.forEach(r => {
     const chip = document.createElement('button');
-    chip.className = 'chip active';
-    chip.textContent = REGION_FULL[r];
-    chip.style.color = REGION_COLOR[r];
-    chip.style.borderColor = REGION_COLOR[r];
-    chip.dataset.region = r;
+    chip.className = 'chip active'; chip.textContent = REGION_FULL[r];
+    chip.style.color = REGION_COLOR[r]; chip.style.borderColor = REGION_COLOR[r];
+    chip.style.background = REGION_COLOR[r] + '22'; chip.dataset.region = r;
     chip.addEventListener('click', () => {
-      if (activeRegions.has(r)) {
-        activeRegions.delete(r);
-        chip.classList.remove('active');
-        chip.style.background = 'transparent';
-      } else {
-        activeRegions.add(r);
-        chip.classList.add('active');
-        chip.style.background = REGION_COLOR[r] + '22';
-      }
+      const on = !active.get(r); active.set(r, on);
+      chip.classList.toggle('active', on);
+      chip.style.background = on ? REGION_COLOR[r]+'22' : 'transparent';
+      chip.style.opacity = on ? '1' : '0.4';
+      // sync legend dot
+      const leg = document.querySelector(`#line-legend [data-region="${r}"]`);
+      if (leg) leg.classList.toggle('dimmed', !on);
       renderLine();
     });
-    chip.style.background = REGION_COLOR[r] + '22';
-    chips1.appendChild(chip);
+    chipsEl.appendChild(chip);
   });
 
-  // Metric buttons
-  document.querySelectorAll('#metric-btns button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#metric-btns button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      metric = btn.dataset.metric;
-      renderLine();
-    });
-  });
+  document.querySelectorAll('#metric-btns button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('#metric-btns button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); metric = b.dataset.metric; renderLine();
+  }));
+  document.querySelectorAll('#scale-btns button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('#scale-btns button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); scaleType = b.dataset.scale; renderLine();
+  }));
 
-  // Scale buttons
-  document.querySelectorAll('#scale-btns button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#scale-btns button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      scaleType = btn.dataset.scale;
-      renderLine();
-    });
-  });
-
-  // Aggregate by region + year
   function aggregate() {
+    // Only include rows where that region is currently active
     const nested = d3.rollup(
-      data.filter(d => d[metric] != null && activeRegions.has(d.region)),
+      data.filter(d => d[metric] != null && active.get(d.region) === true),
       v => d3.mean(v, d => d[metric]),
-      d => d.region,
-      d => d.year
+      d => d.region, d => d.year
     );
     return Array.from(nested, ([region, yearMap]) => ({
       region,
-      values: Array.from(yearMap, ([year, val]) => ({ year, val }))
-        .sort((a, b) => a.year - b.year)
+      values: Array.from(yearMap, ([year, val]) => ({year, val})).sort((a,b) => a.year - b.year)
     }));
   }
 
-  const margin = { top: 20, right: 20, bottom: 40, left: 60 };
+  const margin = {top:20, right:30, bottom:40, left:62};
   const container = document.getElementById('line-chart');
 
   function renderLine() {
     container.innerHTML = '';
     const W = container.clientWidth || 800;
-    const H = Math.max(320, Math.min(420, W * 0.45));
+    const H = Math.max(320, Math.min(430, W * 0.45));
     const iW = W - margin.left - margin.right;
     const iH = H - margin.top - margin.bottom;
 
-    const seriesData = aggregate();
-    const allVals = seriesData.flatMap(s => s.values.map(v => v.val)).filter(v => v > 0);
-    const allYears = [1990, 2013];
+    const series = aggregate();
+    const allVals = series.flatMap(s => s.values.map(v => v.val)).filter(v => v > 0);
+    if (!allVals.length) {
+      container.innerHTML = '<p style="color:var(--text3);padding:2rem;font-family:DM Mono,monospace;font-size:.8rem;text-align:center">Select at least one region above.</p>';
+      return;
+    }
 
-    const xScale = d3.scaleLinear().domain(allYears).range([0, iW]);
+    const xScale = d3.scaleLinear().domain([1990, 2013]).range([0, iW]);
     const yScale = scaleType === 'log'
-      ? d3.scaleLog().domain([Math.max(0.1, d3.min(allVals) * 0.8), d3.max(allVals) * 1.1]).range([iH, 0]).clamp(true)
-      : d3.scaleLinear().domain([0, d3.max(allVals) * 1.05]).range([iH, 0]);
+      ? d3.scaleLog().domain([Math.max(0.1, d3.min(allVals)*.8), d3.max(allVals)*1.12]).range([iH,0]).clamp(true)
+      : d3.scaleLinear().domain([0, d3.max(allVals)*1.07]).range([iH,0]);
 
-    const svg = d3.select(container).append('svg')
-      .attr('width', W).attr('height', H);
+    const svg = d3.select(container).append('svg').attr('width', W).attr('height', H);
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // Grid
-    g.append('g').attr('class', 'grid')
-      .call(d3.axisLeft(yScale).tickSize(-iW).tickFormat(''))
+    g.append('g').call(d3.axisLeft(yScale).tickSize(-iW).tickFormat(''))
       .call(ax => ax.select('.domain').remove())
-      .call(ax => ax.selectAll('line').attr('stroke', '#2a2a2a').attr('stroke-dasharray', '3,3'));
+      .call(ax => ax.selectAll('line').attr('stroke','#232323').attr('stroke-dasharray','3,3'));
 
-    // Axes
-    g.append('g').attr('transform', `translate(0,${iH})`)
+    g.append('g').attr('transform',`translate(0,${iH})`)
       .call(d3.axisBottom(xScale).tickFormat(d3.format('d')).ticks(8))
-      .call(ax => ax.select('.domain').attr('stroke', '#333'))
-      .call(ax => ax.selectAll('text').attr('fill', '#737373').attr('font-size', '11px').attr('font-family', 'DM Mono, monospace'));
-
-    g.append('g')
-      .call(d3.axisLeft(yScale).ticks(5))
+      .call(ax => ax.select('.domain').attr('stroke','#333'))
+      .call(ax => ax.selectAll('text').attr('fill','#737373').attr('font-size','11px').attr('font-family','DM Mono,monospace'));
+    g.append('g').call(d3.axisLeft(yScale).ticks(5))
       .call(ax => ax.select('.domain').remove())
-      .call(ax => ax.selectAll('text').attr('fill', '#737373').attr('font-size', '11px').attr('font-family', 'DM Mono, monospace'));
+      .call(ax => ax.selectAll('text').attr('fill','#737373').attr('font-size','11px').attr('font-family','DM Mono,monospace'));
 
-    // Y label
-    g.append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('x', -iH / 2).attr('y', -48)
-      .attr('text-anchor', 'middle')
-      .attr('fill', '#737373')
-      .attr('font-size', '11px')
-      .attr('font-family', 'DM Mono, monospace')
+    g.append('text').attr('transform','rotate(-90)').attr('x',-iH/2).attr('y',-50)
+      .attr('text-anchor','middle').attr('fill','#737373').attr('font-size','11px').attr('font-family','DM Mono,monospace')
       .text('per 100,000 population');
 
-    const line = d3.line()
+    const lineGen = d3.line()
       .x(d => xScale(d.year))
-      .y(d => yScale(Math.max(scaleType === 'log' ? 0.1 : 0, d.val)))
-      .curve(d3.curveCatmullRom.alpha(0.5));
+      .y(d => yScale(Math.max(scaleType==='log' ? .1 : 0, d.val)))
+      .curve(d3.curveCatmullRom.alpha(.5));
 
-    // Lines
-    seriesData.forEach(s => {
-      const path = g.append('path')
-        .datum(s.values)
-        .attr('fill', 'none')
-        .attr('stroke', REGION_COLOR[s.region])
-        .attr('stroke-width', 2.5)
-        .attr('opacity', 0.9)
-        .attr('d', line);
-
-      // Animate draw
+    // Draw only lines for active regions (series already filtered above)
+    series.forEach(s => {
+      const path = g.append('path').datum(s.values)
+        .attr('fill','none').attr('stroke', REGION_COLOR[s.region])
+        .attr('stroke-width', 2.5).attr('opacity', 0.92)
+        .attr('d', lineGen);
       const len = path.node().getTotalLength();
-      path.attr('stroke-dasharray', len)
-        .attr('stroke-dashoffset', len)
-        .transition().duration(1000).ease(d3.easeCubicOut)
-        .attr('stroke-dashoffset', 0);
+      path.attr('stroke-dasharray', len).attr('stroke-dashoffset', len)
+        .transition().duration(900).ease(d3.easeCubicOut).attr('stroke-dashoffset', 0);
 
-      // Dots at last point
       const last = s.values[s.values.length - 1];
-      g.append('circle')
-        .attr('cx', xScale(last.year))
-        .attr('cy', yScale(Math.max(scaleType === 'log' ? 0.1 : 0, last.val)))
-        .attr('r', 3.5)
-        .attr('fill', REGION_COLOR[s.region])
-        .attr('opacity', 0)
-        .transition().delay(950).duration(300)
-        .attr('opacity', 1);
+      if (last) {
+        const ly = yScale(Math.max(scaleType==='log'?.1:0, last.val));
+        g.append('circle').attr('cx', xScale(last.year)).attr('cy', ly)
+          .attr('r', 4).attr('fill', REGION_COLOR[s.region]).attr('opacity', 0)
+          .transition().delay(860).duration(280).attr('opacity', 1);
+        // Label at line end
+        g.append('text').attr('x', xScale(last.year)+7).attr('y', ly+4)
+          .attr('fill', REGION_COLOR[s.region]).attr('font-size','10px')
+          .attr('font-family','DM Mono,monospace').attr('opacity',0)
+          .text(s.region)
+          .transition().delay(860).duration(280).attr('opacity', .9);
+      }
     });
 
-    // Hover line + tooltip
-    const tooltip = document.getElementById('line-tooltip');
+    // Hover crosshair + tooltip
+    const tipEl = Object.assign(document.createElement('div'), {className:'tip'});
+    container.appendChild(tipEl);
     const bisect = d3.bisector(d => d.year).center;
+    const hLine = g.append('line').attr('stroke','#555').attr('stroke-width',1)
+      .attr('stroke-dasharray','4,3').attr('y1',0).attr('y2',iH).style('display','none');
 
-    const overlay = g.append('rect')
-      .attr('width', iW).attr('height', iH)
-      .attr('fill', 'transparent')
-      .style('cursor', 'crosshair');
-
-    const hoverLine = g.append('line')
-      .attr('stroke', '#444').attr('stroke-width', 1)
-      .attr('stroke-dasharray', '4,3')
-      .attr('y1', 0).attr('y2', iH)
-      .style('display', 'none');
-
-    overlay.on('mousemove', (event) => {
-      const [mx] = d3.pointer(event);
-      const year = Math.round(xScale.invert(mx));
-      hoverLine.attr('x1', mx).attr('x2', mx).style('display', null);
-      const rows = seriesData.map(s => {
-        const idx = bisect(s.values, year);
-        return `<span style="color:${REGION_COLOR[s.region]}">${REGION_FULL[s.region]}</span>: ${s.values[idx]?.val?.toFixed(1) ?? '—'}`;
-      });
-      tooltip.innerHTML = `<strong>Year ${year}</strong>${rows.join('<br>')}`;
-      const rect = container.getBoundingClientRect();
-      const evRect = event.target.getBoundingClientRect();
-      const relX = event.clientX - rect.left + 12;
-      const relY = event.clientY - rect.top - 10;
-      tooltip.style.left = (relX + 160 > rect.width ? relX - 175 : relX) + 'px';
-      tooltip.style.top = Math.max(0, relY) + 'px';
-      tooltip.style.opacity = '1';
-    }).on('mouseleave', () => {
-      hoverLine.style('display', 'none');
-      tooltip.style.opacity = '0';
-    });
+    g.append('rect').attr('width', iW).attr('height', iH).attr('fill','transparent')
+      .style('cursor','crosshair')
+      .on('mousemove', event => {
+        const [mx] = d3.pointer(event);
+        const yr = Math.round(xScale.invert(mx));
+        hLine.attr('x1',mx).attr('x2',mx).style('display',null);
+        const rows = series.map(s => {
+          const v = s.values[bisect(s.values, yr)]?.val;
+          return `<span style="color:${REGION_COLOR[s.region]}">${REGION_FULL[s.region]}</span>: ${v!=null ? v.toFixed(1) : '—'}`;
+        });
+        tipEl.innerHTML = `<strong>Year ${yr}</strong>${rows.join('<br>')}`;
+        const cRect = container.getBoundingClientRect();
+        const rx = event.clientX - cRect.left;
+        tipEl.style.left = (rx + 230 > cRect.width ? rx - 225 : rx + 12) + 'px';
+        tipEl.style.top = Math.max(0, event.clientY - cRect.top - 10) + 'px';
+        tipEl.style.opacity = '1';
+      })
+      .on('mouseleave', () => { hLine.style('display','none'); tipEl.style.opacity='0'; });
   }
 
   window.addEventListener('resize', renderLine);
@@ -816,210 +579,169 @@ function initViz1(data) {
   const legend = document.getElementById('line-legend');
   REGIONS.forEach(r => {
     const item = document.createElement('div');
-    item.className = 'legend-item';
-    item.dataset.region = r;
+    item.className = 'legend-item'; item.dataset.region = r;
     item.innerHTML = `<div class="legend-dot" style="background:${REGION_COLOR[r]}"></div>${REGION_FULL[r]}`;
-    item.addEventListener('click', () => {
-      const chip = chips1.querySelector(`[data-region="${r}"]`);
-      chip?.click();
-      item.classList.toggle('dimmed', !activeRegions.has(r));
-    });
+    item.addEventListener('click', () => chipsEl.querySelector(`[data-region="${r}"]`)?.click());
     legend.appendChild(item);
   });
 }
 
-// ─────────────────────────────────────────────────
+// ══════════════════════════════════════════════════
 // VIZ 2 — SCATTER
-// ─────────────────────────────────────────────────
+// ══════════════════════════════════════════════════
 function initViz2(data) {
-  let selectedYear = 2010;
-  let activeRegions = new Set(REGIONS);
-  let selectedCountry = null;
+  let selectedYear = 2010, selectedCountry = null;
+  const active = new Map(REGIONS.map(r => [r, true]));
 
-  // Region chips
   const chips2 = document.getElementById('region-chips2');
   REGIONS.forEach(r => {
     const chip = document.createElement('button');
-    chip.className = 'chip active';
-    chip.textContent = REGION_FULL[r];
-    chip.style.color = REGION_COLOR[r];
-    chip.style.borderColor = REGION_COLOR[r];
-    chip.style.background = REGION_COLOR[r] + '22';
-    chip.dataset.region = r;
+    chip.className = 'chip active'; chip.textContent = REGION_FULL[r];
+    chip.style.color = REGION_COLOR[r]; chip.style.borderColor = REGION_COLOR[r];
+    chip.style.background = REGION_COLOR[r]+'22'; chip.dataset.region = r;
     chip.addEventListener('click', () => {
-      if (activeRegions.has(r)) {
-        activeRegions.delete(r);
-        chip.classList.remove('active');
-        chip.style.background = 'transparent';
-      } else {
-        activeRegions.add(r);
-        chip.classList.add('active');
-        chip.style.background = REGION_COLOR[r] + '22';
-      }
+      const on = !active.get(r); active.set(r, on);
+      chip.classList.toggle('active', on);
+      chip.style.background = on ? REGION_COLOR[r]+'22' : 'transparent';
+      chip.style.opacity = on ? '1' : '0.4';
       renderScatter();
     });
     chips2.appendChild(chip);
   });
 
-  const slider = document.getElementById('year-slider');
-  const yearDisplay = document.getElementById('year-display');
-  slider.addEventListener('input', () => {
-    selectedYear = +slider.value;
-    yearDisplay.textContent = selectedYear;
+  document.getElementById('year-slider').addEventListener('input', e => {
+    selectedYear = +e.target.value;
+    document.getElementById('year-display').textContent = selectedYear;
     renderScatter();
   });
 
-  const margin = { top: 20, right: 20, bottom: 50, left: 65 };
+  const margin = {top:20,right:20,bottom:50,left:65};
   const container = document.getElementById('scatter-chart');
-  const tooltip = document.getElementById('scatter-tooltip');
+  const tipEl = document.getElementById('scatter-tooltip');
 
-  function getScatterData() {
-    return data.filter(d =>
-      d.year === selectedYear &&
-      d.incidence_rate != null &&
-      d.case_detection != null &&
-      activeRegions.has(d.region)
-    );
+  // Use full year dataset for stable axis bounds
+  function getMaxes(yr) {
+    const all = data.filter(d => d.year===yr && d.incidence_rate!=null);
+    return { maxInc: d3.max(all,d=>d.incidence_rate)||1, maxCases: d3.max(all,d=>d.incidence_total)||1 };
   }
 
   function renderScatter() {
     container.innerHTML = '';
-    const W = container.clientWidth || 800;
-    const H = Math.max(350, Math.min(480, W * 0.5));
-    const iW = W - margin.left - margin.right;
-    const iH = H - margin.top - margin.bottom;
+    const W = container.clientWidth||800;
+    const H = Math.max(350, Math.min(480, W*.5));
+    const iW = W-margin.left-margin.right, iH = H-margin.top-margin.bottom;
 
-    const pts = getScatterData();
-    const maxInc = d3.max(pts, d => d.incidence_rate) || 1;
-    const maxCases = d3.max(pts, d => d.incidence_total) || 1;
+    const {maxInc, maxCases} = getMaxes(selectedYear);
+    const pts = data.filter(d => d.year===selectedYear && d.incidence_rate!=null && d.case_detection!=null && active.get(d.region)===true);
 
-    const xScale = d3.scaleLinear().domain([0, maxInc * 1.05]).range([0, iW]);
-    const yScale = d3.scaleLinear().domain([0, 105]).range([iH, 0]);
-    const sizeScale = d3.scaleSqrt().domain([0, maxCases]).range([3, 28]);
+    const xScale = d3.scaleLinear().domain([0, maxInc*1.05]).range([0,iW]);
+    const yScale = d3.scaleLinear().domain([0,105]).range([iH,0]);
+    const sizeScale = d3.scaleSqrt().domain([0, maxCases]).range([3,28]);
 
-    const svg = d3.select(container).append('svg').attr('width', W).attr('height', H);
-    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+    const svg = d3.select(container).append('svg').attr('width',W).attr('height',H);
+    const g = svg.append('g').attr('transform',`translate(${margin.left},${margin.top})`);
 
-    // Grid
     g.append('g').call(d3.axisLeft(yScale).tickSize(-iW).tickFormat(''))
-      .call(ax => ax.select('.domain').remove())
-      .call(ax => ax.selectAll('line').attr('stroke', '#222').attr('stroke-dasharray', '3,3'));
-    g.append('g').attr('transform', `translate(0,${iH})`)
+      .call(ax=>ax.select('.domain').remove())
+      .call(ax=>ax.selectAll('line').attr('stroke','#1e1e1e').attr('stroke-dasharray','3,3'));
+    g.append('g').attr('transform',`translate(0,${iH})`)
       .call(d3.axisBottom(xScale).tickSize(-iH).tickFormat(''))
-      .call(ax => ax.select('.domain').remove())
-      .call(ax => ax.selectAll('line').attr('stroke', '#222').attr('stroke-dasharray', '3,3'));
+      .call(ax=>ax.select('.domain').remove())
+      .call(ax=>ax.selectAll('line').attr('stroke','#1e1e1e').attr('stroke-dasharray','3,3'));
 
-    // Axes
-    g.append('g').attr('transform', `translate(0,${iH})`)
+    g.append('g').attr('transform',`translate(0,${iH})`)
       .call(d3.axisBottom(xScale).ticks(6))
-      .call(ax => ax.select('.domain').attr('stroke', '#333'))
-      .call(ax => ax.selectAll('text').attr('fill', '#737373').attr('font-size', '11px').attr('font-family', 'DM Mono, monospace'));
-    g.append('g')
-      .call(d3.axisLeft(yScale).ticks(5))
-      .call(ax => ax.select('.domain').remove())
-      .call(ax => ax.selectAll('text').attr('fill', '#737373').attr('font-size', '11px').attr('font-family', 'DM Mono, monospace'));
+      .call(ax=>ax.select('.domain').attr('stroke','#333'))
+      .call(ax=>ax.selectAll('text').attr('fill','#737373').attr('font-size','11px').attr('font-family','DM Mono,monospace'));
+    g.append('g').call(d3.axisLeft(yScale).ticks(5))
+      .call(ax=>ax.select('.domain').remove())
+      .call(ax=>ax.selectAll('text').attr('fill','#737373').attr('font-size','11px').attr('font-family','DM Mono,monospace'));
 
-    // Labels
-    g.append('text').attr('x', iW / 2).attr('y', iH + 40)
-      .attr('text-anchor', 'middle').attr('fill', '#737373').attr('font-size', '11px').attr('font-family', 'DM Mono, monospace')
-      .text('Incidence Rate per 100,000');
-    g.append('text').attr('transform', 'rotate(-90)').attr('x', -iH / 2).attr('y', -52)
-      .attr('text-anchor', 'middle').attr('fill', '#737373').attr('font-size', '11px').attr('font-family', 'DM Mono, monospace')
-      .text('Case Detection Rate (%)');
+    g.append('text').attr('x',iW/2).attr('y',iH+42).attr('text-anchor','middle')
+      .attr('fill','#737373').attr('font-size','11px').attr('font-family','DM Mono,monospace').text('Incidence Rate per 100,000');
+    g.append('text').attr('transform','rotate(-90)').attr('x',-iH/2).attr('y',-53)
+      .attr('text-anchor','middle').attr('fill','#737373').attr('font-size','11px').attr('font-family','DM Mono,monospace').text('Case Detection Rate (%)');
 
-    // Ideal detection line
-    g.append('line').attr('x1', 0).attr('x2', iW).attr('y1', yScale(90)).attr('y2', yScale(90))
-      .attr('stroke', '#f97316').attr('stroke-width', 1).attr('stroke-dasharray', '6,4').attr('opacity', 0.4);
-    g.append('text').attr('x', iW - 5).attr('y', yScale(90) - 6)
-      .attr('text-anchor', 'end').attr('fill', '#f97316').attr('font-size', '10px').attr('opacity', 0.6)
-      .attr('font-family', 'DM Mono, monospace').text('90% detection target');
+    g.append('line').attr('x1',0).attr('x2',iW).attr('y1',yScale(90)).attr('y2',yScale(90))
+      .attr('stroke','#f97316').attr('stroke-width',1.2).attr('stroke-dasharray','6,4').attr('opacity',.45);
+    g.append('text').attr('x',iW-4).attr('y',yScale(90)-7).attr('text-anchor','end')
+      .attr('fill','#f97316').attr('font-size','10px').attr('opacity',.7).attr('font-family','DM Mono,monospace')
+      .text('90% detection target');
 
-    // Circles
-    const circles = g.selectAll('circle').data(pts).join('circle')
+    // Sort large bubbles first so small ones render on top
+    const sorted = [...pts].sort((a,b) => (b.incidence_total||0) - (a.incidence_total||0));
+
+    g.selectAll('circle').data(sorted, d => d.country).join('circle')
       .attr('cx', d => xScale(d.incidence_rate))
       .attr('cy', d => yScale(Math.min(d.case_detection, 100)))
       .attr('r', 0)
       .attr('fill', d => REGION_COLOR[d.region])
-      .attr('fill-opacity', d => d.country === selectedCountry ? 0.95 : 0.55)
-      .attr('stroke', d => d.country === selectedCountry ? '#fff' : REGION_COLOR[d.region])
-      .attr('stroke-width', d => d.country === selectedCountry ? 2.5 : 0.5)
-      .attr('stroke-opacity', d => d.country === selectedCountry ? 1 : 0.4)
-      .style('cursor', 'pointer');
-
-    circles.transition().duration(600).ease(d3.easeBackOut)
-      .attr('r', d => sizeScale(d.incidence_total || 0));
-
-    circles
-      .on('mouseover', (event, d) => {
-        tooltip.innerHTML = `<strong>${d.country}</strong>Incidence: ${d.incidence_rate?.toFixed(1)}<br>Detection: ${d.case_detection?.toFixed(1)}%<br>Region: ${REGION_FULL[d.region]}`;
-        tooltip.style.opacity = '1';
+      .attr('fill-opacity', d => d.country===selectedCountry ? .95 : .5)
+      .attr('stroke', d => d.country===selectedCountry ? '#fff' : REGION_COLOR[d.region])
+      .attr('stroke-width', d => d.country===selectedCountry ? 2.5 : .5)
+      .attr('stroke-opacity', d => d.country===selectedCountry ? 1 : .3)
+      .style('cursor','pointer')
+      .on('mouseover', (ev,d) => {
+        tipEl.innerHTML = `<strong>${d.country}</strong>Incidence: ${d.incidence_rate?.toFixed(1)}<br>Detection: ${d.case_detection?.toFixed(1)}%<br>Region: ${REGION_FULL[d.region]}`;
+        tipEl.style.opacity = '1';
       })
-      .on('mousemove', (event) => {
-        const rect = document.getElementById('scatter-wrap').getBoundingClientRect();
-        tooltip.style.left = (event.clientX - rect.left + 12) + 'px';
-        tooltip.style.top = (event.clientY - rect.top - 10) + 'px';
+      .on('mousemove', ev => {
+        const r = document.getElementById('scatter-wrap').getBoundingClientRect();
+        const lx = ev.clientX-r.left, ly = ev.clientY-r.top;
+        tipEl.style.left = (lx+225>r.width ? lx-225 : lx+12)+'px';
+        tipEl.style.top = Math.max(0,ly-10)+'px';
       })
-      .on('mouseleave', () => { tooltip.style.opacity = '0'; })
-      .on('click', (event, d) => {
-        selectedCountry = d.country === selectedCountry ? null : d.country;
+      .on('mouseleave', () => tipEl.style.opacity='0')
+      .on('click', (ev,d) => {
+        selectedCountry = d.country===selectedCountry ? null : d.country;
         renderScatter();
-        showDetail(d);
-      });
+        showDetail(selectedCountry ? d : null);
+      })
+      .transition().duration(550).ease(d3.easeBackOut)
+      .attr('r', d => sizeScale(d.incidence_total||0));
   }
 
   function showDetail(d) {
     const panel = document.getElementById('detail-panel');
-    const title = document.getElementById('detail-title');
-    const grid = document.getElementById('detail-grid');
     if (!d) { panel.classList.remove('visible'); return; }
     panel.classList.add('visible');
-    title.textContent = `${d.country} · ${selectedYear}`;
-    const stats = [
-      { key: 'Region', val: REGION_FULL[d.region] },
-      { key: 'Incidence Rate', val: d.incidence_rate != null ? d.incidence_rate.toFixed(1) + '/100k' : '—' },
-      { key: 'Prevalence Rate', val: d.prevalence_rate != null ? d.prevalence_rate.toFixed(1) + '/100k' : '—' },
-      { key: 'Mortality Rate', val: d.mortality_rate != null ? d.mortality_rate.toFixed(1) + '/100k' : '—' },
-      { key: 'Total Cases', val: d.incidence_total != null ? d3.format('.3s')(d.incidence_total) : '—' },
-      { key: 'Detection Rate', val: d.case_detection != null ? d.case_detection.toFixed(1) + '%' : '—' },
-      { key: 'HIV in TB (%)', val: d.hiv_pct != null ? d.hiv_pct.toFixed(1) + '%' : '—' },
-    ];
-    grid.innerHTML = stats.map(s =>
-      `<div class="detail-stat"><div class="val">${s.val}</div><div class="key">${s.key}</div></div>`
-    ).join('');
+    const titleEl = document.getElementById('detail-title');
+    titleEl.textContent = `${d.country} · ${selectedYear}`;
+    titleEl.style.cssText = "font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--orange);margin-bottom:.25rem";
+    document.getElementById('detail-grid').innerHTML = [
+      {key:'Region',         val: REGION_FULL[d.region]},
+      {key:'Incidence Rate', val: d.incidence_rate!=null  ? d.incidence_rate.toFixed(1)+'/100k' : '—'},
+      {key:'Prevalence Rate',val: d.prevalence_rate!=null ? d.prevalence_rate.toFixed(1)+'/100k' : '—'},
+      {key:'Mortality Rate', val: d.mortality_rate!=null  ? d.mortality_rate.toFixed(1)+'/100k'  : '—'},
+      {key:'Total Cases',    val: d.incidence_total!=null ? d3.format('.3s')(d.incidence_total)   : '—'},
+      {key:'Detection Rate', val: d.case_detection!=null  ? d.case_detection.toFixed(1)+'%'       : '—'},
+      {key:'HIV in TB (%)',  val: d.hiv_pct!=null         ? d.hiv_pct.toFixed(1)+'%'              : '—'},
+    ].map(s => `<div class="detail-stat"><div class="val">${s.val}</div><div class="key">${s.key}</div></div>`).join('');
   }
 
   window.addEventListener('resize', renderScatter);
   renderScatter();
 }
 
-// ─────────────────────────────────────────────────
+// ══════════════════════════════════════════════════
 // VIZ 3 — BAR CHART
-// ─────────────────────────────────────────────────
+// ══════════════════════════════════════════════════
 function initViz3(data) {
-  let selectedYear = 2010;
-  let mode = 'total';
+  let selectedYear = 2010, mode = 'total';
 
-  const slider2 = document.getElementById('year-slider2');
-  const display2 = document.getElementById('year-display2');
-  slider2.addEventListener('input', () => {
-    selectedYear = +slider2.value;
-    display2.textContent = selectedYear;
+  document.getElementById('year-slider2').addEventListener('input', e => {
+    selectedYear = +e.target.value;
+    document.getElementById('year-display2').textContent = selectedYear;
     renderBar();
   });
+  document.querySelectorAll('#bar-mode-btns button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('#bar-mode-btns button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); mode = b.dataset.mode; renderBar();
+  }));
 
-  document.querySelectorAll('#bar-mode-btns button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#bar-mode-btns button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      mode = btn.dataset.mode;
-      renderBar();
-    });
-  });
-
-  const margin = { top: 20, right: 20, bottom: 60, left: 75 };
+  const margin = {top:20,right:20,bottom:68,left:82};
   const container = document.getElementById('bar-chart');
-  const tooltip = document.getElementById('bar-tooltip');
-
+  const tipEl = document.getElementById('bar-tooltip');
   const modeLabel = {
     total: 'Total Incident Cases',
     rate: 'Avg Incidence Rate per 100,000',
@@ -1027,107 +749,77 @@ function initViz3(data) {
   };
 
   function getBarData() {
-    const yearData = data.filter(d => d.year === selectedYear);
+    const yd = data.filter(d => d.year === selectedYear);
     return REGIONS.map(r => {
-      const rows = yearData.filter(d => d.region === r);
-      let val;
-      if (mode === 'total') val = d3.sum(rows, d => d.incidence_total || 0);
-      else if (mode === 'rate') val = d3.mean(rows.filter(d => d.incidence_rate != null), d => d.incidence_rate) || 0;
-      else val = d3.mean(rows.filter(d => d.mortality_rate != null), d => d.mortality_rate) || 0;
-      return { region: r, value: val };
-    }).sort((a, b) => b.value - a.value);
+      const rows = yd.filter(d => d.region === r);
+      let val = 0;
+      if (mode==='total')    val = d3.sum(rows, d => d.incidence_total||0);
+      else if (mode==='rate') val = d3.mean(rows.filter(d=>d.incidence_rate!=null), d=>d.incidence_rate)||0;
+      else                    val = d3.mean(rows.filter(d=>d.mortality_rate!=null),  d=>d.mortality_rate)||0;
+      return {region:r, value:val||0};
+    }).sort((a,b) => b.value - a.value);
   }
 
   function renderBar() {
     container.innerHTML = '';
-    const W = container.clientWidth || 700;
-    const H = Math.max(320, Math.min(420, W * 0.5));
-    const iW = W - margin.left - margin.right;
-    const iH = H - margin.top - margin.bottom;
-
+    const W = container.clientWidth||700;
+    const H = Math.max(320, Math.min(440, W*.52));
+    const iW = W-margin.left-margin.right, iH = H-margin.top-margin.bottom;
     const barData = getBarData();
-    const xScale = d3.scaleBand()
-      .domain(barData.map(d => d.region))
-      .range([0, iW]).padding(0.3);
-    const yScale = d3.scaleLinear()
-      .domain([0, d3.max(barData, d => d.value) * 1.1])
-      .range([iH, 0]);
 
-    const svg = d3.select(container).append('svg').attr('width', W).attr('height', H);
-    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+    const xScale = d3.scaleBand().domain(barData.map(d=>d.region)).range([0,iW]).padding(.32);
+    const yScale = d3.scaleLinear().domain([0, d3.max(barData,d=>d.value)*1.12]).range([iH,0]);
 
-    // Grid
+    const svg = d3.select(container).append('svg').attr('width',W).attr('height',H);
+    const g = svg.append('g').attr('transform',`translate(${margin.left},${margin.top})`);
+
     g.append('g').call(d3.axisLeft(yScale).tickSize(-iW).tickFormat(''))
-      .call(ax => ax.select('.domain').remove())
-      .call(ax => ax.selectAll('line').attr('stroke', '#222').attr('stroke-dasharray', '3,3'));
+      .call(ax=>ax.select('.domain').remove())
+      .call(ax=>ax.selectAll('line').attr('stroke','#1e1e1e').attr('stroke-dasharray','3,3'));
 
-    // Axes
-    g.append('g').attr('transform', `translate(0,${iH})`)
+    g.append('g').attr('transform',`translate(0,${iH})`)
       .call(d3.axisBottom(xScale).tickFormat(r => REGION_FULL[r]))
-      .call(ax => ax.select('.domain').attr('stroke', '#333'))
-      .call(ax => ax.selectAll('text')
-        .attr('fill', '#a3a3a3')
-        .attr('font-size', '11px')
-        .attr('font-family', 'DM Mono, monospace')
-        .attr('transform', 'rotate(-15)')
-        .attr('text-anchor', 'end')
-        .attr('dy', '0.8em')
-        .attr('dx', '-0.3em')
-      );
+      .call(ax=>ax.select('.domain').attr('stroke','#333'))
+      .call(ax=>ax.selectAll('text')
+        .attr('fill','#a3a3a3').attr('font-size','11px').attr('font-family','DM Mono,monospace')
+        .attr('transform','rotate(-18)').attr('text-anchor','end').attr('dy','.9em').attr('dx','-.2em'));
+
     g.append('g').call(d3.axisLeft(yScale).ticks(5).tickFormat(d3.format('.2s')))
-      .call(ax => ax.select('.domain').remove())
-      .call(ax => ax.selectAll('text').attr('fill', '#737373').attr('font-size', '11px').attr('font-family', 'DM Mono, monospace'));
+      .call(ax=>ax.select('.domain').remove())
+      .call(ax=>ax.selectAll('text').attr('fill','#737373').attr('font-size','11px').attr('font-family','DM Mono,monospace'));
 
-    // Y label
-    g.append('text').attr('transform', 'rotate(-90)').attr('x', -iH / 2).attr('y', -60)
-      .attr('text-anchor', 'middle').attr('fill', '#737373').attr('font-size', '10px')
-      .attr('font-family', 'DM Mono, monospace').text(modeLabel[mode]);
+    g.append('text').attr('transform','rotate(-90)').attr('x',-iH/2).attr('y',-68)
+      .attr('text-anchor','middle').attr('fill','#737373').attr('font-size','10px').attr('font-family','DM Mono,monospace')
+      .text(modeLabel[mode]);
 
-    // Bars
-    const colorScale = d3.scaleSequential()
-      .domain([0, barData.length - 1])
-      .interpolator(d3.interpolateOranges);
-
+    // Bars colored by region (consistent with other charts)
     g.selectAll('rect').data(barData).join('rect')
-      .attr('x', d => xScale(d.region))
-      .attr('width', xScale.bandwidth())
-      .attr('y', iH)
-      .attr('height', 0)
-      .attr('rx', 4)
-      .attr('fill', (d, i) => {
-        const t = (barData.length - 1 - i) / Math.max(1, barData.length - 1);
-        return d3.interpolate('#7c2d12', '#fdba74')(t * 0.85 + 0.15);
+      .attr('x',d=>xScale(d.region)).attr('width',xScale.bandwidth())
+      .attr('y',iH).attr('height',0).attr('rx',4)
+      .attr('fill',d=>REGION_COLOR[d.region]).attr('opacity',.85)
+      .style('cursor','pointer')
+      .on('mouseover',(ev,d)=>{
+        const fmt = mode==='total' ? d3.format(',.0f') : v=>v.toFixed(1);
+        tipEl.innerHTML = `<strong>${REGION_FULL[d.region]}</strong>${modeLabel[mode]}:<br>${fmt(d.value)}`;
+        tipEl.style.opacity='1';
       })
-      .attr('opacity', 0.9)
-      .style('cursor', 'pointer')
-      .on('mouseover', (event, d) => {
-        const fmt = mode === 'total' ? d3.format(',.0f') : v => v.toFixed(1);
-        tooltip.innerHTML = `<strong>${REGION_FULL[d.region]}</strong>${modeLabel[mode]}: ${fmt(d.value)}`;
-        tooltip.style.opacity = '1';
+      .on('mousemove',ev=>{
+        const r=document.getElementById('bar-wrap').getBoundingClientRect();
+        const lx=ev.clientX-r.left, ly=ev.clientY-r.top;
+        tipEl.style.left=(lx+225>r.width?lx-225:lx+12)+'px';
+        tipEl.style.top=Math.max(0,ly-10)+'px';
       })
-      .on('mousemove', (event) => {
-        const rect = document.getElementById('bar-wrap').getBoundingClientRect();
-        tooltip.style.left = (event.clientX - rect.left + 12) + 'px';
-        tooltip.style.top = (event.clientY - rect.top - 10) + 'px';
-      })
-      .on('mouseleave', () => { tooltip.style.opacity = '0'; })
-      .transition().duration(700).ease(d3.easeBackOut)
-      .attr('y', d => yScale(d.value))
-      .attr('height', d => iH - yScale(d.value));
+      .on('mouseleave',()=>tipEl.style.opacity='0')
+      .transition().duration(650).ease(d3.easeBackOut)
+      .attr('y',d=>yScale(d.value)).attr('height',d=>iH-yScale(d.value));
 
-    // Value labels
-    g.selectAll('.bar-label').data(barData).join('text')
-      .attr('class', 'bar-label')
-      .attr('x', d => xScale(d.region) + xScale.bandwidth() / 2)
-      .attr('y', d => yScale(d.value) - 6)
-      .attr('text-anchor', 'middle')
-      .attr('fill', '#fdba74')
-      .attr('font-size', '11px')
-      .attr('font-family', 'DM Mono, monospace')
-      .attr('opacity', 0)
-      .text(d => mode === 'total' ? d3.format('.2s')(d.value) : d.value.toFixed(1))
-      .transition().delay(600).duration(300)
-      .attr('opacity', 1);
+    g.selectAll('.blbl').data(barData).join('text').attr('class','blbl')
+      .attr('x',d=>xScale(d.region)+xScale.bandwidth()/2)
+      .attr('y',d=>yScale(d.value)-7)
+      .attr('text-anchor','middle').attr('fill',d=>REGION_COLOR[d.region])
+      .attr('font-size','11px').attr('font-family','DM Mono,monospace').attr('opacity',0)
+      .text(d=>mode==='total'?d3.format('.2s')(d.value):d.value.toFixed(1))
+      .transition().delay(580).duration(280).attr('opacity',1);
   }
 
   window.addEventListener('resize', renderBar);
