@@ -16,7 +16,6 @@
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
 
-  /* HERO */
   #hero {
     min-height: 100vh; display: flex; flex-direction: column;
     align-items: center; justify-content: center;
@@ -30,7 +29,6 @@
     opacity: 0; animation: fadeUp 0.8s 0.3s forwards; text-align: center; padding: 0 1rem;
   }
   #ticker-wrap { width: min(920px, 92vw); text-align: center; margin-bottom: 1.5rem; }
-  /* FIX 1: white-space:normal so long titles wrap instead of getting clipped */
   #ticker {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(2.2rem, 6vw, 5.5rem);
@@ -56,7 +54,6 @@
     animation: scrollPulse 2s infinite;
   }
 
-  /* SECTIONS */
   .section { max-width: 1200px; margin: 0 auto; padding: 6rem 1.5rem 4rem; }
   .section-header { margin-bottom: 2.5rem; }
   .section-tag {
@@ -76,7 +73,6 @@
   }
   .divider { height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent); margin: 0 1.5rem; }
 
-  /* CHART CARD */
   .chart-card {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 12px; padding: 1.5rem; position: relative; overflow: visible;
@@ -87,7 +83,6 @@
     border-radius: 12px 12px 0 0;
   }
 
-  /* CHART CAPTION */
   .chart-caption {
     margin-top: 1.25rem; padding: 1rem 1.1rem;
     background: var(--bg3); border-left: 3px solid var(--orange);
@@ -96,7 +91,6 @@
   }
   .chart-caption strong { color: var(--orange3); }
 
-  /* CONTROLS */
   .ctrl-group { display: flex; flex-direction: column; gap: 0.3rem; }
   .ctrl-label {
     font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em;
@@ -116,7 +110,6 @@
     display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1.2rem;
   }
 
-  /* CHIPS */
   .region-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
   .chip {
     padding: 0.3rem 0.7rem; border-radius: 999px;
@@ -126,7 +119,6 @@
   }
   .chip.active { font-weight: 500; }
 
-  /* LEGEND */
   .legend { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
   .legend-item {
     display: flex; align-items: center; gap: 0.4rem;
@@ -136,7 +128,6 @@
   .legend-item.dimmed { opacity: 0.3; }
   .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-  /* TOOLTIP */
   .tip {
     position: absolute; background: #111; border: 1px solid var(--orange);
     border-radius: 8px; padding: 0.65rem 0.9rem;
@@ -146,10 +137,8 @@
   }
   .tip strong { color: var(--orange); display: block; margin-bottom: 0.25rem; }
 
-  /* WRAPS */
   #scatter-wrap, #bar-wrap { position: relative; }
 
-  /* DETAIL PANEL */
   #detail-panel {
     background: var(--bg3); border: 1px solid var(--border); border-radius: 10px;
     padding: 1.25rem; margin-top: 1.25rem; display: none; animation: fadeIn 0.25s ease;
@@ -166,7 +155,6 @@
     font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase;
   }
 
-  /* SLIDER */
   .slider-row { display: flex; align-items: center; gap: 1rem; }
   input[type=range] {
     -webkit-appearance: none; appearance: none;
@@ -184,14 +172,12 @@
   }
   .range-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--orange); min-width: 50px; }
 
-  /* FOOTER */
   footer {
     text-align: center; padding: 3rem 1rem 4rem; color: var(--text3);
     font-size: 0.78rem; font-family: 'DM Mono', monospace; letter-spacing: 0.1em;
     border-top: 1px solid var(--border); margin-top: 4rem;
   }
 
-  /* ANIMATIONS */
   @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
   @keyframes fadeIn { from{opacity:0} to{opacity:1} }
   @keyframes scrollPulse { 0%,100%{opacity:.3;transform:scaleY(.8)} 50%{opacity:1;transform:scaleY(1.1)} }
@@ -204,7 +190,6 @@
 </head>
 <body>
 
-<!-- HERO -->
 <section id="hero">
   <canvas id="particle-canvas"></canvas>
   <div class="hero-label">WHO Global Tuberculosis Burden Dataset · 1990 – 2013</div>
@@ -215,7 +200,6 @@
 
 <div class="divider"></div>
 
-<!-- VIZ 1 -->
 <div class="section reveal" id="sec1">
   <div class="section-header">
     <div class="section-tag">Visualization 01 — Temporal Trends</div>
@@ -262,7 +246,6 @@
 
 <div class="divider"></div>
 
-<!-- VIZ 2 -->
 <div class="section reveal" id="sec2">
   <div class="section-header">
     <div class="section-tag">Visualization 02 — Country Comparison</div>
@@ -307,7 +290,6 @@
 
 <div class="divider"></div>
 
-<!-- VIZ 3 -->
 <div class="section reveal" id="sec3">
   <div class="section-header">
     <div class="section-tag">Visualization 03 — Regional Snapshot</div>
@@ -355,13 +337,10 @@
 </footer>
 
 <script>
-// ── Region config ────────────────────────────────
 const REGION_FULL  = { AFR:'Africa', AMR:'Americas', EMR:'E. Mediterranean', EUR:'Europe', SEA:'SE Asia', WPR:'W. Pacific' };
-// FIX: distinct, visible colors for all 6 regions (no more washed-out yellows)
 const REGION_COLOR = { AFR:'#f97316', AMR:'#fb923c', EMR:'#fbbf24', EUR:'#a3e635', SEA:'#38bdf8', WPR:'#e879f9' };
 const REGIONS = ['AFR','AMR','EMR','EUR','SEA','WPR'];
 
-// ── Ticker ────────────────────────────────────────
 const QUESTIONS = [
   'WHERE IS TB <span class="highlight">KILLING</span> THE MOST?',
   'WHO IS BEING <span class="highlight">MISSED</span>?',
@@ -390,7 +369,6 @@ function nextQ() {
 }
 setInterval(nextQ, 3400);
 
-// ── Particles ─────────────────────────────────────
 (function(){
   const cv = document.getElementById('particle-canvas'), ctx = cv.getContext('2d');
   let W, H;
@@ -412,11 +390,9 @@ setInterval(nextQ, 3400);
   })();
 })();
 
-// ── Scroll reveal ─────────────────────────────────
 const io = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting && e.target.classList.add('visible')), {threshold:.08});
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-// ── Load data ─────────────────────────────────────
 fetch('tb_data.json')
   .then(r => r.json())
   .then(raw => { initViz1(raw); initViz2(raw); initViz3(raw); })
@@ -424,15 +400,10 @@ fetch('tb_data.json')
     c.insertAdjacentHTML('beforeend','<p style="color:var(--text2);padding:2rem 0">⚠ tb_data.json not found. Place it in the same folder as index.html.</p>')
   ));
 
-// ══════════════════════════════════════════════════
-// VIZ 1 — LINE CHART
-// ══════════════════════════════════════════════════
 function initViz1(data) {
   let metric = 'incidence_rate', scaleType = 'linear';
-  // FIX: use a Map per-region so toggling actually hides that region's line
   const active = new Map(REGIONS.map(r => [r, true]));
 
-  // Build chips
   const chipsEl = document.getElementById('region-chips1');
   REGIONS.forEach(r => {
     const chip = document.createElement('button');
@@ -444,7 +415,6 @@ function initViz1(data) {
       chip.classList.toggle('active', on);
       chip.style.background = on ? REGION_COLOR[r]+'22' : 'transparent';
       chip.style.opacity = on ? '1' : '0.4';
-      // sync legend dot
       const leg = document.querySelector(`#line-legend [data-region="${r}"]`);
       if (leg) leg.classList.toggle('dimmed', !on);
       renderLine();
@@ -462,7 +432,6 @@ function initViz1(data) {
   }));
 
   function aggregate() {
-    // Only include rows where that region is currently active
     const nested = d3.rollup(
       data.filter(d => d[metric] != null && active.get(d.region) === true),
       v => d3.mean(v, d => d[metric]),
@@ -520,7 +489,6 @@ function initViz1(data) {
       .y(d => yScale(Math.max(scaleType==='log' ? .1 : 0, d.val)))
       .curve(d3.curveCatmullRom.alpha(.5));
 
-    // Draw only lines for active regions (series already filtered above)
     series.forEach(s => {
       const path = g.append('path').datum(s.values)
         .attr('fill','none').attr('stroke', REGION_COLOR[s.region])
@@ -536,7 +504,6 @@ function initViz1(data) {
         g.append('circle').attr('cx', xScale(last.year)).attr('cy', ly)
           .attr('r', 4).attr('fill', REGION_COLOR[s.region]).attr('opacity', 0)
           .transition().delay(860).duration(280).attr('opacity', 1);
-        // Label at line end
         g.append('text').attr('x', xScale(last.year)+7).attr('y', ly+4)
           .attr('fill', REGION_COLOR[s.region]).attr('font-size','10px')
           .attr('font-family','DM Mono,monospace').attr('opacity',0)
@@ -545,7 +512,6 @@ function initViz1(data) {
       }
     });
 
-    // Hover crosshair + tooltip
     const tipEl = Object.assign(document.createElement('div'), {className:'tip'});
     container.appendChild(tipEl);
     const bisect = d3.bisector(d => d.year).center;
@@ -575,7 +541,6 @@ function initViz1(data) {
   window.addEventListener('resize', renderLine);
   renderLine();
 
-  // Legend
   const legend = document.getElementById('line-legend');
   REGIONS.forEach(r => {
     const item = document.createElement('div');
@@ -586,9 +551,6 @@ function initViz1(data) {
   });
 }
 
-// ══════════════════════════════════════════════════
-// VIZ 2 — SCATTER
-// ══════════════════════════════════════════════════
 function initViz2(data) {
   let selectedYear = 2010, selectedCountry = null;
   const active = new Map(REGIONS.map(r => [r, true]));
@@ -619,7 +581,6 @@ function initViz2(data) {
   const container = document.getElementById('scatter-chart');
   const tipEl = document.getElementById('scatter-tooltip');
 
-  // Use full year dataset for stable axis bounds
   function getMaxes(yr) {
     const all = data.filter(d => d.year===yr && d.incidence_rate!=null);
     return { maxInc: d3.max(all,d=>d.incidence_rate)||1, maxCases: d3.max(all,d=>d.incidence_total)||1 };
@@ -668,7 +629,6 @@ function initViz2(data) {
       .attr('fill','#f97316').attr('font-size','10px').attr('opacity',.7).attr('font-family','DM Mono,monospace')
       .text('90% detection target');
 
-    // Sort large bubbles first so small ones render on top
     const sorted = [...pts].sort((a,b) => (b.incidence_total||0) - (a.incidence_total||0));
 
     g.selectAll('circle').data(sorted, d => d.country).join('circle')
@@ -723,9 +683,6 @@ function initViz2(data) {
   renderScatter();
 }
 
-// ══════════════════════════════════════════════════
-// VIZ 3 — BAR CHART
-// ══════════════════════════════════════════════════
 function initViz3(data) {
   let selectedYear = 2010, mode = 'total';
 
@@ -792,7 +749,6 @@ function initViz3(data) {
       .attr('text-anchor','middle').attr('fill','#737373').attr('font-size','10px').attr('font-family','DM Mono,monospace')
       .text(modeLabel[mode]);
 
-    // Bars colored by region (consistent with other charts)
     g.selectAll('rect').data(barData).join('rect')
       .attr('x',d=>xScale(d.region)).attr('width',xScale.bandwidth())
       .attr('y',iH).attr('height',0).attr('rx',4)
